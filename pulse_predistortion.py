@@ -19,36 +19,38 @@ from utils import DataType
 
 
 ### Input Options ##
-PATH = f"C:\\Users\\Aftershock\\Documents\\" + \
-         "pulse_predistortion\\pulse_predistortion\\" 
+PATH = f""
 
-WAVEFORM_TYPE = DataType.PI_SCOPE  # Can be either PI_SCOPE or LINE_RESPONSE
+WAVEFORM_TYPE = DataType.LINE_RESPONSE  # Can be either PI_SCOPE or LINE_RESPONSE
 FOLDER = PATH + ("pi_scope\\" if WAVEFORM_TYPE == DataType.PI_SCOPE 
                               else "line_response\\")
-FILE = "20230811_150530_somerset_pi_pulse_scope_cut"
-INPUT_WAVEFORM_PATH = FOLDER + FILE + ".h5"
+FILE = "20250621_231354_converted_pi_scope_lr"
+INPUT_WAVEFORM_PATH = FOLDER + FILE + ".npz"
 
 ### Filter Saving Options ###
 SAVE_FILTERS = 0
-FILTER_SAVE_LOCATION = "filters/pi_scope_filter_20230813_IIR_5.pickle"
+FILTER_SAVE_LOCATION = "filters/pi_scope_filter_20250622_IIR_A.pickle"
 
 SAMPLING_PERIOD = 1e-9
 ### IIR Filtering Options ###
 DO_IIR = 1
-DISP = 100
+DISP = 0
 IIR_SAMPLE_POINTS = [
-                     [85 + DISP, 2000 + DISP],
-                    #  [80 + DISP, 2000 + DISP],
+                     [3201 + DISP, 5000 + DISP],
+                     [201 + DISP, 4000 + DISP],
+                     [650 + DISP, 3200 + DISP],
                      ]
 
 # Define bounds for parameters a, b, tau of each IIR fitting. Default if None.
-IIR_PARAM_BOUNDS = [#((0, 0, 0), (2.0, np.inf, np.inf)),
-                    ((0, -np.inf, 0), (2.0, 0, np.inf)),
+IIR_PARAM_BOUNDS = [((0, 0, 0), (2.0, np.inf, np.inf)),
+                    ((0, -np.inf, 0), (5.0, 0, np.inf)),
+                    ((0, -np.inf, 0), (5.0, 0, np.inf)),
                     # ((0, -np.inf, 0), (2.0, 0, np.inf)),
                     #((0, -np.inf, 0), (10.0, 0, np.inf)),
                     ]
 
-IIR_PARAM_GUESS = [#(0.0, 1, 1000e-9),
+IIR_PARAM_GUESS = [(0.0, 1, 3000e-9),
+                   (0.5, -1, 1000e-9),
                    (0.5, -1, 1000e-9),
                 #    (0.5, -1, 1000e-9),
                    ]
@@ -78,7 +80,7 @@ if WAVEFORM_TYPE == DataType.PI_SCOPE:
         file_path=INPUT_WAVEFORM_PATH, plot_final=True, plot_individual_fits=PLOT_FREQUENCY_FITS,
     )
     input_wavefrom = np.concatenate(([input_wavefrom[0]]*DISP, input_wavefrom), axis = 0)
-    np.savez(PATH + "\\line_response\\20230811_150530_somerset_pi_pulse_scope_cut_lr.npz", input_wavefrom)
+    np.savez(PATH + "line_response\\20250621_231354_converted_pi_scope_lr.npz", input_wavefrom)
 else:
     data_file = np.load(INPUT_WAVEFORM_PATH)
     input_wavefrom = data_file["arr_0"]
@@ -86,6 +88,7 @@ else:
     a2 = (input_wavefrom)
 
     input_wavefrom = np.concatenate((a1, a2), axis = 0)
+    print(input_wavefrom.shape, "AAAAAAA")
     
 time_points = np.arange(len(input_wavefrom)) * SAMPLING_PERIOD
 

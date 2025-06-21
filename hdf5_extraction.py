@@ -10,16 +10,16 @@ import sys
 import h5py
 
 # input_file = "C:\\Users\\qcrew\\Desktop\\qcrew\\data\\somerset\\20230703\\150526_somerset_pi_pulse_scope.h5"
-input_file = "C:\\Users\\qcrew\\Desktop\\qcrew\\data\\somerset\\20230719\\121741_somerset_pi_pulse_scope.h5"
-output_file = "20230719_121741_somerset_pi_pulse_scope_cut.h5"
+input_file = "23-13-54_FFFrequencyTracking.hdf5"
+output_file = "20250621_231354_lakeside_pi_pulse_scope_cut.h5"
 
 infile = h5py.File(input_file, "r")
 outfile = h5py.File(output_file, "w")
 
 # outfile.create_dataset("data", data=infile["data"]["state"])
-outfile.create_dataset("data", data=infile["data"]["I_AVG"])
-outfile.create_dataset("x", data=infile["data"]["x"])
-outfile.create_dataset("y", data=infile["data"]["y"])
+outfile.create_dataset("data", data=infile["Q"])
+outfile.create_dataset("x", data=infile["qubit_frequency"])
+outfile.create_dataset("y", data=infile["time_delay"])
 
 infile.close()
 outfile.close()
