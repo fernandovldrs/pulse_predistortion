@@ -113,15 +113,67 @@ def constant_cosine_reset(length_constant, length_ring, lpad=0, rpad=0, amp=1, d
     return timesteps, pulse
 
 
-# import matplotlib.pyplot as plt
+def constant_cosine_hold(length_constant, 
+                         amp_constant,
+                         length_ring_start,
+                         length_ring_middle,
+                         length_ring_end, 
+                         length_hold, 
+                         amp_hold, 
+                         lpad=0, rpad=0, dt=1e-9,):
+    def ring_up_wave(length_ring, reverse=False, shape="cos"):
+        if shape == "cos":
+            i_wave = ring_up_cos(length_ring)
+        elif shape == "tanh":
+            i_wave = ring_up_tanh(length_ring)
+        else:
+            raise ValueError("Type must be 'cos' or 'tanh', not %s" % shape)
+        if reverse:
+            i_wave = i_wave[::-1]
+        return i_wave
 
-# ts, pulse = gaussian_pulse(
-#     sigma=500,
-#     chop=8,
-#     lpad=200,
-#     rpad=200,
-#     dt=1e-9,
-#     amp=1,
-# )
-# plt.scatter(ts, pulse)
-# plt.show()
+    def ring_up_cos(length_ring):
+        return 0.5 * (1 - np.cos(np.linspace(0, np.pi, length_ring)))
+
+    def ring_up_tanh(length_ring):
+        ts = np.linspace(-2, 2, length_ring)
+        return (1 + np.tanh(ts)) / 2 
+
+    ring_up = ring_up_wave(length_ring_start)*amp_constant
+    ring_middle = (amp_constant - amp_hold)*ring_up_wave(2 * length_ring_middle, reverse=True) + amp_hold
+    ring_down = amp_hold*ring_up_wave(length_ring_end)
+    constant = np.full(length_constant, amp_constant)
+    constant_reverse = np.full(length_hold, amp_hold)
+    pulse = np.concatenate(
+        (
+            [0] * lpad,
+            ring_up,
+            constant,
+            ring_middle,
+            constant_reverse,
+            ring_down,
+            [0] * rpad,
+        )
+    )
+    # pulse = [0] * lpad + list(pulse)
+    total_length = lpad + length_constant + length_hold + length_ring_end + length_ring_middle + length_ring_start + rpad
+
+    timesteps = np.array([dt * i for i in range(pulse.shape[0])])
+    print(pulse.shape)
+    print(len(timesteps))
+    return timesteps, pulse
+
+
+import matplotlib.pyplot as plt
+
+ts, pulse = constant_cosine_hold(1000, 
+                         1,
+                         16,
+                         4,
+                         0, 
+                         2000, 
+                         -0.2, 
+                         lpad=0, rpad=0, dt=1e-9,
+)
+plt.scatter(ts, pulse)
+plt.show()
