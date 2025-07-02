@@ -13,24 +13,24 @@ from pulses import (
 )
 from utils import PulseType, SweepType
 
-EXISTING_FILTER_PATH = "filters/pi_scope_filter_20230725_IIR_FIR_6th.pickle"
+EXISTING_FILTER_PATH = "filters/pi_scope_filter_20250622_IIR_C.pickle"
 
 ### Saving options ###
 SAVE_PREDISTORTED_PULSE = 1
 SAVE_PATH = "./"
 
 ### Pulse generation options ###
-PULSE_TYPE = PulseType.SQUARE_HOLD
-BATCH_NORMALIZATION = False
+PULSE_TYPE = PulseType.CONSTANT_COSINE
+BATCH_NORMALIZATION = True
 
 ## Construct parameter sweep ##
 # NOTE: ALL the params needed to construct the pulse must be defined in either CONSTANT_PARAMS or SWEEP_PARAM. See the individual generate_<pulse_type>_pulse functions for inofrmation on what parameters are needed.
 DO_PARAM_SWEEP = False
-CONSTANT_PARAMS = {"lpad": 1000, "hold_time": 1200,}  # 1800
+CONSTANT_PARAMS = {"lpad": 16, "hold_time": 1200,}  # 1800
 SWEEP_PARAM = {
     "name": "on_time",
     "type": SweepType.VALUES,
-    "values": np.arange(4, 350, 4),  # [2000, 4000, 5000], #ns
+    "values": np.arange(4, 400, 1),  # [2000, 4000, 5000], #ns
 }
 
 
@@ -38,9 +38,10 @@ SWEEP_PARAM = {
 # NOTE: This will be ignored if DO_PARAM_SWEEP is set to True
 PULSE_PARAMS = [
     {
-        "lpad": 160,
-        "on_time": 300,  # ns
-        "hold_time": 1200,
+        "lpad": 0,
+        "rpad": 0,
+        "length_constant": 1000,  # ns
+        "length_ring": 500,
     },
 ]
 
@@ -214,14 +215,9 @@ if __name__ == "__main__":
             plt.show()
 
         if SAVE_PREDISTORTED_PULSE:
-            save_location = f"{SAVE_PATH}/{i}.npz"
+            save_location = f"{SAVE_PATH}/{i}"
             if DO_PARAM_SWEEP:
-                save_location = f"{SAVE_PATH}/square_IIR_FIR_{SWEEP_PARAM['name']}_{pulse_param_list[i][SWEEP_PARAM['name']]}ns.npz"
-            np.savez(
-                save_location,
-                I_quad=predistorted_pulse,
-                Q_quad=predistorted_pulse,
-                dt=[1],
-            )
+                save_location = f"{SAVE_PATH}/square_{SWEEP_PARAM['name']}_{pulse_param_list[i][SWEEP_PARAM['name']]}ns"
+            np.save(save_location,predistorted_pulse.T[0])
             print(f"Waveform saved to {save_location}")
     print("---------------------- DONE -----------------------")
