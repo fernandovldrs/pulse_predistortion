@@ -6,7 +6,7 @@ import os
 from scipy.optimize import curve_fit
  
 
-data_file_path = "pi_scope\\20250621_231354_lakeside_pi_pulse_scope_cut.h5"
+data_file_path = "pi_scope\\20250622_012339_lakeside_pi_pulse_scope_cut.h5"
 output_filename = "converted_pi_scope.npz"
 
 CLOCK_PERIOD = 4e-9  # It is unlikely that this should ever be changed

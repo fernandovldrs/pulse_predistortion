@@ -24,34 +24,34 @@ PATH = f""
 WAVEFORM_TYPE = DataType.LINE_RESPONSE  # Can be either PI_SCOPE or LINE_RESPONSE
 FOLDER = PATH + ("pi_scope\\" if WAVEFORM_TYPE == DataType.PI_SCOPE 
                               else "line_response\\")
-FILE = "20250621_231354_converted_pi_scope_lr"
+FILE = "20250622_012339_converted_pi_scope_lr"
 INPUT_WAVEFORM_PATH = FOLDER + FILE + ".npz"
 
 ### Filter Saving Options ###
-SAVE_FILTERS = 0
-FILTER_SAVE_LOCATION = "filters/pi_scope_filter_20250622_IIR_A.pickle"
+SAVE_FILTERS = 1
+FILTER_SAVE_LOCATION = "filters/pi_scope_filter_20250622_IIR_B.pickle"
 
 SAMPLING_PERIOD = 1e-9
 ### IIR Filtering Options ###
 DO_IIR = 1
 DISP = 0
 IIR_SAMPLE_POINTS = [
-                     [3201 + DISP, 5000 + DISP],
-                     [201 + DISP, 4000 + DISP],
-                     [650 + DISP, 3200 + DISP],
+                     [120 + DISP, 2000 + DISP],
+                    #  [201 + DISP, 4000 + DISP],
+                    #  [650 + DISP, 3200 + DISP],
                      ]
 
 # Define bounds for parameters a, b, tau of each IIR fitting. Default if None.
-IIR_PARAM_BOUNDS = [((0, 0, 0), (2.0, np.inf, np.inf)),
-                    ((0, -np.inf, 0), (5.0, 0, np.inf)),
-                    ((0, -np.inf, 0), (5.0, 0, np.inf)),
+IIR_PARAM_BOUNDS = [#((0, 0, 0), (2.0, np.inf, np.inf)),
+                    ((0, 0, -np.inf), (5.0, np.inf, 0)),
+                    #((0, -np.inf, 0), (5.0, 0, np.inf)),
                     # ((0, -np.inf, 0), (2.0, 0, np.inf)),
                     #((0, -np.inf, 0), (10.0, 0, np.inf)),
                     ]
 
-IIR_PARAM_GUESS = [(0.0, 1, 3000e-9),
-                   (0.5, -1, 1000e-9),
-                   (0.5, -1, 1000e-9),
+IIR_PARAM_GUESS = [#(0.0, 1, 3000e-9),
+                   (0.9, 0.1, -1000e-9),
+                   #(0.5, -1, 1000e-9),
                 #    (0.5, -1, 1000e-9),
                    ]
 
