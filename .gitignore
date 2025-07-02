@@ -2,3 +2,6 @@
 /line_response
 /pi_scope
 /__pycache__
+*.npy
+*.npz
+*.zip
