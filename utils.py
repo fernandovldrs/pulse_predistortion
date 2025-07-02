@@ -8,6 +8,7 @@ class PulseType(Enum):
     CONSTANT_COSINE = 3
     CONSTANT_COSINE_RESET = 4
     CUSTOM = 5
+    CONSTANT_COSINE_HOLD = 6
 
 
 class DataType(Enum):
