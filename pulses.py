@@ -164,16 +164,16 @@ def constant_cosine_hold(length_constant,
     return timesteps, pulse
 
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-ts, pulse = constant_cosine_hold(1000, 
-                         1,
-                         16,
-                         4,
-                         0, 
-                         2000, 
-                         -0.2, 
-                         lpad=0, rpad=0, dt=1e-9,
-)
-plt.scatter(ts, pulse)
-plt.show()
+# ts, pulse = constant_cosine_hold(1000, 
+#                          1,
+#                          16,
+#                          4,
+#                          0, 
+#                          2000, 
+#                          -0.2, 
+#                          lpad=0, rpad=0, dt=1e-9,
+# )
+# plt.scatter(ts, pulse)
+# plt.show()

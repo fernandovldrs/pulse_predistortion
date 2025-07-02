@@ -10,6 +10,7 @@ from pulses import (
     constant_cosine,
     constant_cosine_reset,
     gaussian_pulse,
+    constant_cosine_hold,
 )
 from utils import PulseType, SweepType
 
@@ -20,7 +21,7 @@ SAVE_PREDISTORTED_PULSE = 1
 SAVE_PATH = "./"
 
 ### Pulse generation options ###
-PULSE_TYPE = PulseType.CONSTANT_COSINE
+PULSE_TYPE = PulseType.CONSTANT_COSINE_HOLD
 BATCH_NORMALIZATION = True
 
 ## Construct parameter sweep ##
@@ -38,10 +39,15 @@ SWEEP_PARAM = {
 # NOTE: This will be ignored if DO_PARAM_SWEEP is set to True
 PULSE_PARAMS = [
     {
+        "length_constant": 1200, 
+        "amp_constant": 0.2,
+        "length_ring_start": 100,
+        "length_ring_middle": 4,
+        "length_ring_end": 0, 
+        "length_hold": 1000, 
+        "amp_hold":-0.191, 
         "lpad": 0,
         "rpad": 0,
-        "length_constant": 1000,  # ns
-        "length_ring": 500,
     },
 ]
 
@@ -119,6 +125,26 @@ def generate_constant_cosine_reset(pulse_params):
     )
     return pulse
 
+def generate_constant_cosine_hold(pulse_params):
+    length_constant = pulse_params["length_constant"]
+    amp_constant = pulse_params["amp_constant"]
+    length_ring_start = pulse_params["length_ring_start"]
+    length_ring_middle = pulse_params["length_ring_middle"]
+    length_ring_end = pulse_params["length_ring_end"]
+    length_hold = pulse_params["length_hold"]
+    amp_hold = pulse_params["amp_hold"]
+    lpad = pulse_params["lpad"]
+    rpad = pulse_params["rpad"]
+    pulse = constant_cosine_hold(length_constant, 
+                         amp_constant,
+                         length_ring_start,
+                         length_ring_middle,
+                         length_ring_end, 
+                         length_hold, 
+                         amp_hold, 
+                         lpad=lpad, rpad=rpad)
+    return pulse
+
 
 def generate_gaussian_pulse(pulse_params):
     sigma = pulse_params["sigma"]
@@ -151,6 +177,8 @@ def generate_predistorted_pulse(
         _, pulse = generate_constant_cosine_reset(pulse_params=pulse_params)
     elif pulse_type == PulseType.CUSTOM:
         _, pulse = load_existing_pulse(pulse_params=pulse_params)
+    elif pulse_type == PulseType.CONSTANT_COSINE_HOLD:
+        _, pulse = generate_constant_cosine_hold(pulse_params=pulse_params)
     else:
         raise (f"Pulse type {pulse_type} not yet implemented")
 
