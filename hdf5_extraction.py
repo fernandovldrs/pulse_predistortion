@@ -10,8 +10,8 @@ import sys
 import h5py
 
 # input_file = "C:\\Users\\qcrew\\Desktop\\qcrew\\data\\somerset\\20230703\\150526_somerset_pi_pulse_scope.h5"
-input_file = "23-13-54_FFFrequencyTracking.hdf5"
-output_file = "20250621_231354_lakeside_pi_pulse_scope_cut.h5"
+input_file = "01-23-39_FFFrequencyTracking.hdf5"
+output_file = "20250622_012339_lakeside_pi_pulse_scope_cut.h5"
 
 infile = h5py.File(input_file, "r")
 outfile = h5py.File(output_file, "w")
