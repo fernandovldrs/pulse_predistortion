@@ -1,8 +1,8 @@
 import pickle
 
-FILTER_PATHS = ["filters/pi_scope_filter_20230813_IIR_4.pickle", "filters/pi_scope_filter_20230811_IIR.pickle"]
+FILTER_PATHS = ["filters/pi_scope_filter_20250622_IIR_A.pickle", "filters/pi_scope_filter_20250622_IIR_B.pickle"]
 
-SAVE_PATH = "pi_scope_filter_20230813_IIR.pickle"
+SAVE_PATH = "pi_scope_filter_20250622_IIR_C.pickle"
 
 iir_filters = []
 fir_filters = []
